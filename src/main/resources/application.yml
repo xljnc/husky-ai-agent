@@ -1,0 +1,35 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: husky-ai-agent
+  main:
+    web-application-type: reactive  # 必须设置为reactive，启用Netty + WebFlux
+    banner-mode: console
+
+  ai:
+    mcp:
+      server:
+        enabled: true
+        type: async  # WebFlux下必须使用async异步模式
+        name: husky-ai-agent
+        version: 1.0.0
+        transport: WEBFLUX
+        sse-enYdpoint: /mcp/sse              # SSE长连接端点
+        sse-message-endpoint: /mcp/messages # 消息提交端点
+        keep-alive-interval: 30s            # SSE心跳间隔，防止连接断开
+        capabilities:
+          tool: true                        # 启用工具能力
+          resource: false                   # 暂不启用资源能力
+          prompt: false                     # 暂不启用提示词模板
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    io.modelcontextprotocol: DEBUG
+    org.springframework.ai.mcp: DEBUG
+    com.wt.test: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
